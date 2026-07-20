@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import './Login.css';
 
@@ -7,11 +8,19 @@ function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Frontend-only - no backend integration
-    console.log('Login attempt:', { email, password, rememberMe });
+    // Extract name from email (part before @) for display
+    const name = email.split('@')[0] || email;
+    const user = { email, name };
+    
+    // Save user to localStorage
+    localStorage.setItem('user', JSON.stringify(user));
+    
+    // Navigate to dashboard
+    navigate('/dashboard');
   };
 
   return (
@@ -34,10 +43,8 @@ function Login() {
           <h1 className="login-title">Welcome Back</h1>
           <p className="login-subtitle">Sign in to continue to your account</p>
         </div>
-
-        {/* Form */}
+        
         <form className="login-form" onSubmit={handleSubmit}>
-          {/* Email Field */}
           <div className="input-group">
             <label htmlFor="email" className="input-label">Email Address</label>
             <div className="input-wrapper">
