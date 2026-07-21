@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
-import './Login.css';
+import './Signup.css';
 
-function Login() {
+function Signup() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -16,45 +17,69 @@ function Login() {
     e.preventDefault();
     setError('');
 
+    // Validate password match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match!');
+      return;
+    }
+
     try {
-      // Send login request to backend API
+      // Send signup request to backend API
       const response = await axios.post(
-        'http://localhost:5000/api/auth/login',
-        { email, password },
+        'http://localhost:5000/api/auth/signup',
+        { name, email, password },
         { withCredentials: true } // Important: allow cookies to be sent/received
       );
 
-      // If login successful, navigate to dashboard
+      // If signup successful, navigate to dashboard
       if (response.data.success) {
         navigate('/dashboard');
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      setError(error.response?.data?.message || 'Signup failed');
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
+    <div className="signup-container">
+      <div className="signup-card">
         {/* Logo Section */}
-        <div className="login-logo">
-          <div className="login-logo-img">
+        <div className="signup-logo">
+          <div className="signup-logo-img">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span className="login-logo-text">Company</span>
+          <span className="signup-logo-text">Company</span>
         </div>
 
         {/* Header */}
-        <div className="login-header">
-          <h1 className="login-title">Welcome Back</h1>
-          <p className="login-subtitle">Sign in to continue to your account</p>
+        <div className="signup-header">
+          <h1 className="signup-title">Create Account</h1>
+          <p className="signup-subtitle">Sign up to get started</p>
         </div>
         
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="signup-form" onSubmit={handleSubmit}>
+          {/* Name Field */}
+          <div className="input-group">
+            <label htmlFor="name" className="input-label">Full Name</label>
+            <div className="input-wrapper">
+              <User className="input-icon" />
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter your name"
+                className="input-field"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Email Field */}
           <div className="input-group">
             <label htmlFor="email" className="input-label">Email Address</label>
             <div className="input-wrapper">
@@ -97,34 +122,38 @@ function Login() {
             </div>
           </div>
 
-          {/* Remember Me & Forgot Password */}
-          <div className="login-options">
-            <label className="remember-me">
+          {/* Confirm Password Field */}
+          <div className="input-group">
+            <label htmlFor="confirmPassword" className="input-label">Confirm Password</label>
+            <div className="input-wrapper">
+              <Lock className="input-icon" />
               <input
-                type="checkbox"
-                className="remember-checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
+                id="confirmPassword"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Confirm your password"
+                className="input-field"
+                style={{ paddingLeft: '40px', paddingRight: '40px' }}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
               />
-              <span className="remember-label">Remember Me</span>
-            </label>
-            <a href="#" className="forgot-password">Forgot Password?</a>
+            </div>
           </div>
 
-          {/* Sign In Button */}
-          <button type="submit" className="signin-button">Sign In</button>
+          {/* Sign Up Button */}
+          <button type="submit" className="signin-button">Sign Up</button>
         </form>
 
         {/* Error Message */}
         {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>{error}</p>}
-        
-        {/* Sign Up Link */}
+
+        {/* Login Link */}
         <p className="signup-link">
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+          Already have an account? <Link to="/">Sign In</Link>
         </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Signup;

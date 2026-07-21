@@ -4,12 +4,31 @@
   font-weight: 400;
 
   color: #333;
-  background: #f5f7fa;
+  background: #f4f6f9;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* CSS Variables */
+:root {
+  --primary-blue: #144667;
+  --accent-orange: #eb5141;
+  --background: #f4f6f9;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+  --text-dark: #1f2937;
+  --text-gray: #6b7280;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --sidebar-width: 250px;
+  --navbar-height: 60px;
+  --border-radius: 12px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 * {
@@ -28,8 +47,13 @@ body,
 body {
   margin: 0;
   overflow-x: hidden;
+  overflow-y: hidden;
   background: #f5f7fa;
   font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+html {
+  overflow-y: hidden;
 }
 
 #root {

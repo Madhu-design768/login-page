@@ -1,0 +1,50 @@
+.dashboard-page {
+  padding: 24px;
+  min-height: 100vh;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-content {
+  text-align: center;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 40px 60px;
+  box-shadow: var(--shadow);
+}
+
+.dashboard-content h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0 0 16px 0;
+}
+
+.welcome-text {
+  font-size: 16px;
+  color: var(--text-gray);
+  margin: 0 0 32px 0;
+}
+
+.logout-section {
+  margin-top: 20px;
+}
+
+.logout-button {
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: var(--primary-blue);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.logout-button:hover {
+  background: var(--accent-orange);
+  transform: translateY(-1px);
+}
