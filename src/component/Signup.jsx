@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
-import './Signup.css';
+import { useAuth } from '../context/AuthContext';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -12,6 +12,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setAuthenticatedUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,11 +29,12 @@ function Signup() {
       const response = await axios.post(
         'http://localhost:5000/api/auth/signup',
         { name, email, password },
-        { withCredentials: true } // Important: allow cookies to be sent/received
+        { withCredentials: true }
       );
 
-      // If signup successful, navigate to dashboard
+      // If signup successful, set authenticated user in context and navigate to dashboard
       if (response.data.success) {
+        setAuthenticatedUser(response.data.user);
         navigate('/dashboard');
       }
     } catch (error) {
@@ -41,37 +43,39 @@ function Signup() {
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-card">
+    <div className="w-full min-h-[100vh] flex items-center justify-center bg-[#144667] px-4">
+      <div className="w-full max-w-md bg-white rounded-xl p-4 shadow-lg">
         {/* Logo Section */}
-        <div className="signup-logo">
-          <div className="signup-logo-img">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+        <div className="flex justify-center mb-5">
+          <div className="flex items-center">
+            <div className="w-12 h-12 bg-[#144667] rounded-lg flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <span className="ml-2.5 text-xl font-semibold text-[#144667]">Company</span>
           </div>
-          <span className="signup-logo-text">Company</span>
         </div>
 
         {/* Header */}
-        <div className="signup-header">
-          <h1 className="signup-title">Create Account</h1>
-          <p className="signup-subtitle">Sign up to get started</p>
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-semibold text-[#1f2937] mb-1.5">Create Account</h1>
+          <p className="text-sm text-[#6b7280]">Sign up to get started</p>
         </div>
         
-        <form className="signup-form" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-3.5" onSubmit={handleSubmit}>
           {/* Name Field */}
-          <div className="input-group">
-            <label htmlFor="name" className="input-label">Full Name</label>
-            <div className="input-wrapper">
-              <User className="input-icon" />
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="name" className="text-xs font-medium text-[#374151]">Full Name</label>
+            <div className="relative">
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b7280] w-4 h-4" />
               <input
                 id="name"
                 type="text"
                 placeholder="Enter your name"
-                className="input-field"
+                className="w-full h-11 px-10 border border-[#d1d5db] rounded-lg text-sm outline-none focus:border-[#144667] focus:ring-4 focus:ring-[rgba(20,70,103,0.1)]"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -80,15 +84,15 @@ function Signup() {
           </div>
 
           {/* Email Field */}
-          <div className="input-group">
-            <label htmlFor="email" className="input-label">Email Address</label>
-            <div className="input-wrapper">
-              <Mail className="input-icon" />
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="email" className="text-xs font-medium text-[#374151]">Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b7280] w-4 h-4" />
               <input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                className="input-field"
+                className="w-full h-11 px-10 border border-[#d1d5db] rounded-lg text-sm outline-none focus:border-[#144667] focus:ring-4 focus:ring-[rgba(20,70,103,0.1)]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -97,23 +101,22 @@ function Signup() {
           </div>
 
           {/* Password Field */}
-          <div className="input-group">
-            <label htmlFor="password" className="input-label">Password</label>
-            <div className="input-wrapper">
-              <Lock className="input-icon" />
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="password" className="text-xs font-medium text-[#374151]">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b7280] w-4 h-4" />
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
-                className="input-field"
-                style={{ paddingLeft: '40px', paddingRight: '40px' }}
+                className="w-full h-11 px-10 border border-[#d1d5db] rounded-lg text-sm outline-none focus:border-[#144667] focus:ring-4 focus:ring-[rgba(20,70,103,0.1)]"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className="password-toggle"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 border-none bg-transparent cursor-pointer text-[#6b7280]"
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -123,16 +126,15 @@ function Signup() {
           </div>
 
           {/* Confirm Password Field */}
-          <div className="input-group">
-            <label htmlFor="confirmPassword" className="input-label">Confirm Password</label>
-            <div className="input-wrapper">
-              <Lock className="input-icon" />
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="confirmPassword" className="text-xs font-medium text-[#374151]">Confirm Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b7280] w-4 h-4" />
               <input
                 id="confirmPassword"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Confirm your password"
-                className="input-field"
-                style={{ paddingLeft: '40px', paddingRight: '40px' }}
+                className="w-full h-11 px-10 border border-[#d1d5db] rounded-lg text-sm outline-none focus:border-[#144667] focus:ring-4 focus:ring-[rgba(20,70,103,0.1)]"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -141,15 +143,15 @@ function Signup() {
           </div>
 
           {/* Sign Up Button */}
-          <button type="submit" className="signin-button">Sign Up</button>
+          <button type="submit" className="w-full h-11 bg-[#144667] text-white text-sm font-semibold rounded-lg cursor-pointer hover:bg-[#0f3552]">Sign Up</button>
         </form>
 
         {/* Error Message */}
-        {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>{error}</p>}
+        {error && <p className="text-red-500 text-center mb-2.5">{error}</p>}
 
         {/* Login Link */}
-        <p className="signup-link">
-          Already have an account? <Link to="/">Sign In</Link>
+        <p className="mt-5 text-center text-sm text-[#6b7280]">
+          Already have an account? <Link to="/" className="text-[#144667] font-semibold no-underline hover:underline">Sign In</Link>
         </p>
       </div>
     </div>
